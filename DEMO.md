@@ -11,7 +11,7 @@ This is the short version of Course 3. You're showing people what they'll actual
 
 ## Before you go live (15 min prep)
 
-1. Clone the repo, install deps, add your Gemini key to `.env`
+1. Clone the repo, install deps, add your Groq key to `.env`
 2. Run these once to make sure nothing surprises you:
    - `python chapters/01_overview.py`
    - `python chapters/02_planner.py`
@@ -144,9 +144,9 @@ Ask for questions. Share the repo link.
 
 ## When things go wrong
 
-**Missing API key** — check `.env`, key should not say `your_gemini_api_key_here`
+**Missing API key** — check `.env`, key should not say `your_groq_api_key_here`
 
-**Gemini returns 400** — already handled in `config.py` (Chat Completions model, OpenAI tracing disabled). Restart and retry.
+**Groq returns 400** — if you see `json_schema` or `json_validate_failed`, confirm you're on the latest code (agents parse JSON manually, no `output_type`). Restart Streamlit after pulling changes.
 
 **Streamlit hangs** — restart it; fall back to chapter CLI scripts
 

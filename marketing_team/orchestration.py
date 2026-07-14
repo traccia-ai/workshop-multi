@@ -7,7 +7,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from agents import Runner
+from marketing_team.structured import run_structured
 
 from marketing_team.agents import (
     build_copywriter,
@@ -48,11 +48,7 @@ class RunMetrics:
 
 async def plan_campaign(brief: str) -> CampaignPlan:
     planner = build_planner()
-    result = await Runner.run(planner, brief)
-    plan = result.final_output
-    if not isinstance(plan, CampaignPlan):
-        raise TypeError(f"Planner did not return CampaignPlan, got {type(plan)}")
-    return plan
+    return await run_structured(planner, brief, CampaignPlan)
 
 
 async def draft_for_subtask(subtask: Subtask, plan: CampaignPlan) -> DraftPiece:
@@ -66,11 +62,7 @@ async def draft_for_subtask(subtask: Subtask, plan: CampaignPlan) -> DraftPiece:
         f"Title hint: {subtask.title}\n"
         f"Brief: {subtask.brief}\n"
     )
-    result = await Runner.run(copywriter, prompt)
-    draft = result.final_output
-    if not isinstance(draft, DraftPiece):
-        raise TypeError(f"Copywriter did not return DraftPiece, got {type(draft)}")
-    return draft
+    return await run_structured(copywriter, prompt, DraftPiece)
 
 
 async def edit_draft(draft: DraftPiece, plan: CampaignPlan) -> EditedPiece:
@@ -83,11 +75,7 @@ async def edit_draft(draft: DraftPiece, plan: CampaignPlan) -> EditedPiece:
         f"Body:\n{draft.body}\n"
         f"Author notes: {draft.notes}\n"
     )
-    result = await Runner.run(editor, prompt)
-    edited = result.final_output
-    if not isinstance(edited, EditedPiece):
-        raise TypeError(f"Editor did not return EditedPiece, got {type(edited)}")
-    return edited
+    return await run_structured(editor, prompt, EditedPiece)
 
 
 async def optimize_seo(edited: EditedPiece, plan: CampaignPlan) -> SeoOptimizedPiece:
@@ -99,11 +87,7 @@ async def optimize_seo(edited: EditedPiece, plan: CampaignPlan) -> SeoOptimizedP
         f"Title: {edited.title}\n"
         f"Body:\n{edited.body}\n"
     )
-    result = await Runner.run(seo, prompt)
-    optimized = result.final_output
-    if not isinstance(optimized, SeoOptimizedPiece):
-        raise TypeError(f"SEO agent did not return SeoOptimizedPiece, got {type(optimized)}")
-    return optimized
+    return await run_structured(seo, prompt, SeoOptimizedPiece)
 
 
 async def run_sequential(brief: str, metrics: RunMetrics | None = None) -> CampaignPackage:

@@ -16,16 +16,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
-DEFAULT_MODEL = "gemini-2.0-flash"
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
 
 def get_api_key() -> str:
-    key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or ""
+    key = os.getenv("GROQ_API_KEY") or ""
     if not key or key.startswith("your_"):
         raise RuntimeError(
-            "Missing GEMINI_API_KEY. Copy .env.example to .env and paste your "
-            "free key from https://aistudio.google.com/apikey"
+            "Missing GROQ_API_KEY. Copy .env.example to .env and paste your "
+            "key from https://console.groq.com/keys"
         )
     return key
 
@@ -36,9 +36,9 @@ def get_model_name() -> str:
 
 @lru_cache(maxsize=1)
 def get_model() -> OpenAIChatCompletionsModel:
-    """Gemini via OpenAI-compatible Chat Completions (same pattern as Courses 1–2)."""
-    client = AsyncOpenAI(api_key=get_api_key(), base_url=GEMINI_BASE_URL)
-    # Prefer Traccia over OpenAI's built-in trace backend when using Gemini.
+    """Groq via OpenAI-compatible Chat Completions."""
+    client = AsyncOpenAI(api_key=get_api_key(), base_url=GROQ_BASE_URL)
+    # Prefer Traccia over OpenAI's built-in trace backend when using Groq.
     set_default_openai_client(client=client, use_for_tracing=False)
     set_default_openai_api("chat_completions")
     set_tracing_disabled(disabled=True)

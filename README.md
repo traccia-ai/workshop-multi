@@ -48,7 +48,7 @@ If `python3 -m venv .venv` works on your machine without the `--without-pip` wor
 cp .env.example .env
 ```
 
-Open `.env` and paste your Gemini key from https://aistudio.google.com/apikey
+Open `.env` and paste your Groq key from https://console.groq.com/keys
 
 ### 3. Run it
 
@@ -78,7 +78,7 @@ Web UI:
 streamlit run app.py
 ```
 
-To deploy: push to GitHub, connect on [Streamlit Cloud](https://share.streamlit.io), pick `app.py`, and add `GEMINI_API_KEY` in secrets.
+To deploy: push to GitHub, connect on [Streamlit Cloud](https://share.streamlit.io), pick `app.py`, and add `GROQ_API_KEY` in secrets.
 
 ---
 
@@ -89,7 +89,7 @@ marketing_team/
   agents.py          Planner, Copywriter, Editor, SEO, and a Manager that calls them as tools
   orchestration.py   Sequential, parallel, and human review logic
   models.py          Structured outputs (Pydantic)
-  config.py          Gemini + Traccia setup
+  config.py          Groq + Traccia setup
 
 chapters/            Seven scripts, one per course chapter
 app.py               Streamlit UI
@@ -102,7 +102,7 @@ DEMO.md              Speaking notes for the 1-hour live demo
 ## Tools used
 
 - **Agents:** OpenAI Agents SDK
-- **Model:** Gemini (free tier) through an OpenAI-compatible endpoint
+- **Model:** Groq (free tier) through an OpenAI-compatible endpoint
 - **Tracing:** Traccia — one `init()` call, auto-instruments the Agents SDK
 - **UI:** Streamlit
 

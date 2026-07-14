@@ -29,7 +29,7 @@ async def main() -> None:
     init_observability()
     planner = build_planner()
     print(f"Agent: {planner.name}")
-    print(f"Output type: {planner.output_type.__name__}")
+    print("Output type: CampaignPlan (parsed from JSON)")
     print("\nBrief:\n", SAMPLE_BRIEF, "\n")
 
     plan = await plan_campaign(SAMPLE_BRIEF)

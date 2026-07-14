@@ -1,7 +1,7 @@
 """Marketing Agent Team — Planner + Copywriter + Editor + SEO specialist.
 
-Uses the OpenAI Agents SDK with Gemini (OpenAI-compatible endpoint).
-Orchestration style: code-driven sequential / parallel + agents-as-tools.
+Uses the OpenAI Agents SDK with Groq (OpenAI-compatible endpoint).
+Structured outputs are parsed from JSON text (Groq json_schema mode is flaky).
 """
 
 from __future__ import annotations
@@ -9,41 +9,52 @@ from __future__ import annotations
 from agents import Agent
 
 from marketing_team.config import get_model
-from marketing_team.models import CampaignPlan, DraftPiece, EditedPiece, SeoOptimizedPiece
 
+JSON_RULE = "Return ONLY a raw JSON object. No markdown fences, no extra text."
 
-PLANNER_INSTRUCTIONS = """
+PLANNER_INSTRUCTIONS = f"""
 You are the Campaign Planner for a marketing agent team.
 
 Given a campaign brief, produce a structured plan with:
 - campaign_name, audience, goal, tone
-- 3 subtasks (exactly one blog, one social, one seo) with clear briefs
+- exactly 3 subtasks: one blog, one social, one seo
 
-Keep briefs concrete and short so specialist agents can execute them.
+Each subtask needs: id, channel, title, brief, priority.
+channel must be exactly one of: blog, social, seo
+priority must be one of: high, medium, low
+
+{JSON_RULE}
 """.strip()
 
-COPYWRITER_INSTRUCTIONS = """
+COPYWRITER_INSTRUCTIONS = f"""
 You are a marketing Copywriter.
 
 Write compelling, on-brand content for the assigned channel.
-Return structured output: channel, title, body, and optional notes.
-Blog: 250–400 words. Social: 1–3 short posts. Stay faithful to the brief.
+Return JSON with: channel, title, body, notes.
+channel must be: blog, social, or seo.
+Blog: 250-400 words. Social: 1-3 short posts.
+
+{JSON_RULE}
 """.strip()
 
-EDITOR_INSTRUCTIONS = """
+EDITOR_INSTRUCTIONS = f"""
 You are a sharp marketing Editor.
 
-Improve clarity, tone, and structure of the draft. Fix fluff and weak CTAs.
-Return structured output with channel, title, body, and a short list of changes_made.
+Improve clarity, tone, and structure of the draft.
+Return JSON with: channel, title, body, changes_made (list of strings).
 Do not invent new product claims that were not in the draft.
+
+{JSON_RULE}
 """.strip()
 
-SEO_INSTRUCTIONS = """
+SEO_INSTRUCTIONS = f"""
 You are an SEO specialist.
 
-Optimize the content for search without killing readability.
-Return structured output: channel, title, body, primary_keyword,
-secondary_keywords (3–5), and a meta_description (<=155 chars).
+Optimize content for search without killing readability.
+Return JSON with: channel, title, body, primary_keyword,
+secondary_keywords (list of 3-5 strings), meta_description (max 155 chars).
+
+{JSON_RULE}
 """.strip()
 
 
@@ -52,7 +63,6 @@ def build_planner() -> Agent:
         name="Planner",
         instructions=PLANNER_INSTRUCTIONS,
         model=get_model(),
-        output_type=CampaignPlan,
     )
 
 
@@ -61,7 +71,6 @@ def build_copywriter() -> Agent:
         name="Copywriter",
         instructions=COPYWRITER_INSTRUCTIONS,
         model=get_model(),
-        output_type=DraftPiece,
     )
 
 
@@ -70,7 +79,6 @@ def build_editor() -> Agent:
         name="Editor",
         instructions=EDITOR_INSTRUCTIONS,
         model=get_model(),
-        output_type=EditedPiece,
     )
 
 
@@ -79,7 +87,6 @@ def build_seo() -> Agent:
         name="SEO Specialist",
         instructions=SEO_INSTRUCTIONS,
         model=get_model(),
-        output_type=SeoOptimizedPiece,
     )
 
 
