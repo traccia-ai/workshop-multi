@@ -1,0 +1,20 @@
+# Algen Academy Course 3 — local Traccia settings
+# Console exporter is enough for the workshop; set TRACCIA_API_KEY for cloud.
+
+[tracing]
+sample_rate = 1.0
+auto_start_trace = true
+auto_trace_name = "marketing-agent-team"
+use_otlp = false
+
+[exporters]
+enable_console = true
+enable_file = false
+file_exporter_path = "traces/traces.jsonl"
+reset_trace_file = false
+
+[instrumentation]
+enable_patching = true
+enable_token_counting = true
+enable_costs = true
+openai_agents = true
