@@ -60,7 +60,7 @@ secondary_keywords (list of 3-5 strings), meta_description (max 155 chars).
 
 def build_planner() -> Agent:
     return Agent(
-        name="Planner",
+        name="Algen Planner",
         instructions=PLANNER_INSTRUCTIONS,
         model=get_model(),
     )
@@ -68,7 +68,7 @@ def build_planner() -> Agent:
 
 def build_copywriter() -> Agent:
     return Agent(
-        name="Copywriter",
+        name="Algen Copywriter",
         instructions=COPYWRITER_INSTRUCTIONS,
         model=get_model(),
     )
@@ -76,7 +76,7 @@ def build_copywriter() -> Agent:
 
 def build_editor() -> Agent:
     return Agent(
-        name="Editor",
+        name="Algen Editor",
         instructions=EDITOR_INSTRUCTIONS,
         model=get_model(),
     )
@@ -84,7 +84,7 @@ def build_editor() -> Agent:
 
 def build_seo() -> Agent:
     return Agent(
-        name="SEO Specialist",
+        name="Algen SEO Agent",
         instructions=SEO_INSTRUCTIONS,
         model=get_model(),
     )
@@ -97,7 +97,7 @@ def build_manager_with_tools() -> Agent:
     seo = build_seo()
 
     return Agent(
-        name="Marketing Manager",
+        name="Algen Marketing Manager",
         instructions=(
             "You manage a marketing content team. For a campaign brief:\n"
             "1) Call Copywriter to draft blog or social content.\n"
