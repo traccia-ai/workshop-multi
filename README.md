@@ -1,43 +1,61 @@
-# Course 3: Marketing Agent Team
+# Course 3 — Marketing Agent Team
 
-**Algen Academy · Advanced · 6-hour workshop** (this repo also powers the **1-hour demo trailer**)
+Workshop code for Algen Academy's advanced course on multi-agent systems.
 
-Orchestrate a **Planner + Copywriter + Editor + SEO** marketing team with human review, parallel scaling, and end-to-end observability via [Traccia](https://traccia.ai).
+You build a small marketing team of agents: a Planner breaks a campaign brief into tasks, then a Copywriter, Editor, and SEO agent do the work. A human approves before anything goes out. Everything is traced with Traccia.
 
-Workshop page: https://algen.ai/multi-agent-systems-workshop
+Full course page: https://algen.ai/multi-agent-systems-workshop
 
----
-
-## What you build
-
-A coordinated system that:
-
-1. Turns a **campaign brief** into structured subtasks (Planner)
-2. Delegates to **Copywriter → Editor → SEO** specialists
-3. Runs work **sequentially or in parallel**
-4. Pauses for **human approval** before publish
-5. Traces every agent / LLM call with **Traccia**
-6. Exposes the team behind a single **Streamlit** interface
+This repo also has the **1-hour demo** version of the same project. If you're running the live session, read `DEMO.md`.
 
 ---
 
-## Quick start
+## What you're building
+
+One agent can write a blog post. That's fine for a toy demo.
+
+In production, work usually splits across roles — someone plans, someone writes, someone edits, someone checks SEO, and a human signs off before publish. That's what this repo models.
+
+By the end you have:
+
+- A Planner that turns a brief into blog / social / SEO subtasks
+- Specialist agents for each step
+- Two ways to run them: one after another, or in parallel
+- A human review step before publish
+- Traces across every agent call (via Traccia)
+- A Streamlit app that runs the whole thing from one screen
+
+---
+
+## Get it running
+
+### 1. Set up the environment
 
 ```bash
+cd workshop-multi
 python3 -m venv .venv --without-pip
 .venv/bin/python -c "import urllib.request; urllib.request.urlretrieve('https://bootstrap.pypa.io/get-pip.py', 'get-pip.py')"
 .venv/bin/python get-pip.py && rm get-pip.py
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env        # paste GEMINI_API_KEY from https://aistudio.google.com/apikey
 ```
 
-If `python3 -m venv .venv` works on your machine, you can use that instead of `--without-pip`.
+If `python3 -m venv .venv` works on your machine without the `--without-pip` workaround, use that instead.
 
-### Run chapters
+### 2. Add your API key
 
 ```bash
-python chapters/01_overview.py
+cp .env.example .env
+```
+
+Open `.env` and paste your Gemini key from https://aistudio.google.com/apikey
+
+### 3. Run it
+
+Chapter by chapter (recommended for learning):
+
+```bash
+python chapters/01_overview.py      # no API key needed
 python chapters/02_planner.py
 python chapters/03_specialists.py
 python chapters/04_hitl.py
@@ -46,7 +64,7 @@ python chapters/06_observability.py
 python chapters/07_integration.py
 ```
 
-### Run full campaign (CLI)
+Full campaign from the command line:
 
 ```bash
 python run_campaign.py
@@ -54,59 +72,58 @@ python run_campaign.py --mode sequential
 python run_campaign.py --no-approval
 ```
 
-### Streamlit UI
+Web UI:
 
 ```bash
 streamlit run app.py
 ```
 
-Deploy: push to GitHub → [Streamlit Community Cloud](https://share.streamlit.io) → select `app.py`. Add `GEMINI_API_KEY` in secrets.
+To deploy: push to GitHub, connect on [Streamlit Cloud](https://share.streamlit.io), pick `app.py`, and add `GEMINI_API_KEY` in secrets.
 
 ---
 
-## Repo layout
+## What's in the repo
 
 ```
-marketing_team/          # reusable package
-  agents.py              # Planner, Copywriter, Editor, SEO, Manager-as-tools
-  orchestration.py       # sequential / parallel / HITL
-  models.py              # structured outputs (Pydantic)
-  config.py              # Gemini + Traccia setup
-chapters/                # 7 progressive scripts (matches course outline)
-app.py                   # Streamlit interface
-run_campaign.py          # CLI entrypoint
-DEMO.md                  # 1-hour demo speaking script (instructor)
+marketing_team/
+  agents.py          Planner, Copywriter, Editor, SEO, and a Manager that calls them as tools
+  orchestration.py   Sequential, parallel, and human review logic
+  models.py          Structured outputs (Pydantic)
+  config.py          Gemini + Traccia setup
+
+chapters/            Seven scripts, one per course chapter
+app.py               Streamlit UI
+run_campaign.py      CLI entry point
+DEMO.md              Speaking notes for the 1-hour live demo
 ```
 
 ---
 
-## Stack
+## Tools used
 
-| Piece | Choice |
-|-------|--------|
-| Agents | [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) |
-| Model | Gemini (free) via OpenAI-compatible API |
-| Observability | [Traccia](https://traccia.ai) (`traccia.init()`, auto Agents SDK) |
-| UI | Streamlit |
+- **Agents:** OpenAI Agents SDK
+- **Model:** Gemini (free tier) through an OpenAI-compatible endpoint
+- **Tracing:** Traccia — one `init()` call, auto-instruments the Agents SDK
+- **UI:** Streamlit
 
-Same foundation as Courses 1–2; Course 3 adds **multi-agent orchestration**.
+If you've done Course 1 or 2, the setup will feel familiar. Course 3 is where you move from one agent to a team.
 
 ---
 
-## Instructor: 1-hour demo
+## Before you teach or demo
 
-See **[DEMO.md](./DEMO.md)** for the minute-by-minute script, talking points, and failure checklist.
+Read `DEMO.md`. It has the speaking flow, what to show on screen, and what to do when something breaks.
 
-Target for tomorrow: this code + first pass of that demo script rehearsed once.
-
----
-
-## Prerequisites
-
-Course 2 or equivalent: Agents SDK, tools, basic APIs, comfort with Python async.
+You should run through chapters 02–04 at least once before going live.
 
 ---
 
-## License / use
+## Who this is for
 
-Workshop material for Algen Academy demos and cohorts. Do not present as a product pitch for Traccia — introduce observability as the natural fix after multi-agent complexity shows up (see DEMO.md language guidelines).
+Course 2 or similar experience: comfortable with the Agents SDK, tools, APIs, and basic Python async.
+
+---
+
+## A note on Traccia
+
+Don't open with "here's our product." Let people hit the pain first — four agents, something fails, terminal logs aren't enough. Then introduce tracing the way you'd introduce any debugging tool: "this category of tool exists, today we're using Traccia because it's free and plugs into the SDK we're already using." The ideas transfer to Datadog, Jaeger, or whatever your team uses.
