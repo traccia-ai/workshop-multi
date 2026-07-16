@@ -1,4 +1,4 @@
-# Course 3 — Marketing Agent Team
+# Course 3 - Marketing Agent Team
 
 Workshop code for Algen Academy’s advanced course: **Designing Multi-Agent AI Systems**.
 
